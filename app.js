@@ -15,6 +15,3 @@ http.createServer(function(request, response){
 
 console.log('Server running at http:3000 127.0.0.1');
 
-// 4. Function that handles reading of files and merge values into html
-	// read from file and get string
-		// merge values into html?string
