@@ -10,7 +10,7 @@ var util = require("util");
  */
 function Profile(username) {
 
-    // what's happening here??
+    // what's happening here? read more later
     EventEmitter.call(this);
     profileEmitter = this;
 

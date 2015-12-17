@@ -4,10 +4,8 @@ var querystring = require('querystring');
 
 var commonHeader = { 'Content-Type': 'text/html' };
 
-// Handle HTTP route GET / and POST / (Home)
 function home(request, response){
-	// if (url = '/' && GET)
-		// show search
+
 	if(request.url === '/'){
 	  if(request.method.toLowerCase() === 'get'){
   		response.writeHead(200, commonHeader);
@@ -16,58 +14,55 @@ function home(request, response){
   		render.view('footer', {}, response);
   		response.end();
 	  }else{
-		// if (url = '/' && POST)
-		// get post data from body (uses name & value of "POST" thing)
+
+		// uses name & name's value of "POST" element)
 		request.on('data', function(postBody){
 			var query = querystring.parse(postBody.toString());
+			console.log(query.username);
+			// how do we handle errors if a bad username is passed in this way?
 			response.writeHead(303, {'Location': '/' + query.username});
 			response.end();
 		});
-		// extract username
-		// redirect to /username
 	  	
 	  }
 	}
+	response.on('error', function(error){
+		console.log(error.message);
+	});
 }
-// Handle HTTP route GET /:username (emmabbishop)
-function user(request, response){
-	
-	// if (url == '/...')
+
+
+function user(request, response){	
 	var username = request.url.replace('/','');
 	if(username.length>0){
+		console.log('user called on ' + request.url + ' with username: ' + username);
 		response.writeHead(200, commonHeader);	
 		render.view('header', {},response);
 
-		// get json from Treehouse (from profile.js module)
 		var studentProfile = new Profile(username);
-		// on 'end'
-		// WHERE does the profileJSON variable come from?
+
+		// Where does the profileJSON variable name come from?
 		studentProfile.on("end", function(profileJSON){
-			// show profiles
-			// store values which we need
 			var values = {
-				avatarUrl: profileJSON.gravatar_url, // where does profileJSON come from?
+				avatarUrl: profileJSON.gravatar_url,
 				username: profileJSON.profile_name,
 				badges: profileJSON.badges.length,
 				javascriptPoints: profileJSON.points.JavaScript
 			}
 
-			// simple response
 			render.view('profile', values, response);
 			render.view('footer', {}, response);
 			response.end();
 
 		});
 
-		// on 'error'
 		studentProfile.on('error', function(error){
-			// show error
 			response.writeHead(200, commonHeader);
 			render.view('error', {errorMessage: error.message}, response);
 			render.view('search', {}, response);
 			render.view('footer', {}, response);
 			response.end();
-		})
+		});
 	}
 }
 

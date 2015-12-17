@@ -1,12 +1,9 @@
 var router = require('./router.js');
 
-// Problem: simple way to look at user's badge count & js points from browser
-
-
-//  Solution: use node.js to look up profile(s) and serve via http
-// 1. Create web server
 var http = require('http');
 http.createServer(function(request, response){
+	console.log(request.url);
+
 	// does this mean that both home and user are called 
 	// repeatedly, continuously?
 	router.home(request, response);
