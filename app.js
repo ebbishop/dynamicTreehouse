@@ -2,7 +2,6 @@ var router = require('./router.js');
 
 var http = require('http');
 http.createServer(function(request, response){
-	console.log(request.url);
 
 	// does this mean that both home and user are called 
 	// repeatedly, continuously?

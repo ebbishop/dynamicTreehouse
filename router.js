@@ -18,8 +18,6 @@ function home(request, response){
 		// uses name & name's value of "POST" element)
 		request.on('data', function(postBody){
 			var query = querystring.parse(postBody.toString());
-			console.log(query.username);
-			// how do we handle errors if a bad username is passed in this way?
 			response.writeHead(303, {'Location': '/' + query.username});
 			response.end();
 		});
@@ -27,7 +25,12 @@ function home(request, response){
 	  }
 	}
 	response.on('error', function(error){
-		console.log(error.message);
+		response.writeHead(200, commonHeader);
+		render.view('header', {},response);
+		render.view('error', {errorMessage: error.message}, response);
+		render.view('search', {}, response);
+		render.view('footer', {}, response);
+		response.end();
 	});
 }
 
@@ -35,7 +38,6 @@ function home(request, response){
 function user(request, response){	
 	var username = request.url.replace('/','');
 	if(username.length>0){
-		console.log('user called on ' + request.url + ' with username: ' + username);
 		response.writeHead(200, commonHeader);	
 		render.view('header', {},response);
 
@@ -57,7 +59,6 @@ function user(request, response){
 		});
 
 		studentProfile.on('error', function(error){
-			response.writeHead(200, commonHeader);
 			render.view('error', {errorMessage: error.message}, response);
 			render.view('search', {}, response);
 			render.view('footer', {}, response);
